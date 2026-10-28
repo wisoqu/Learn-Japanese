@@ -1,0 +1,20 @@
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# node / тесты
+.test/node_modules/
+.test/package-lock.json
+.test/package.json
+
+# серверное состояние (прогресс пользователей — не в репо)
+server/state/
+*.tmp
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
