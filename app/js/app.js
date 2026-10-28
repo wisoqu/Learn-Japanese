@@ -6,12 +6,11 @@ import { t, I18N, LANGS, SUPPORTED } from "./i18n.js";
 import { settings, THEMES } from "./settings.js";
 import { progress, DAY } from "./srs.js";
 import {
-  DATA, loadData, rowsBySet, sets, setById, rowById, charData, setLabel,
+  DATA, loadData, rowsBySet, sets, rowById, charData, setLabel,
   readings, distractors, escapeHtml, el,
 } from "./data.js";
 import {
-  glyphSVG, fitBox, animateStrokes, setStrokesVisible, pathLength,
-  WritePad, scoreDrawing,
+  glyphSVG, fitBox, animateStrokes, setStrokesVisible, WritePad,
 } from "./strokes.js";
 import { speak, speakRomaji, stopSpeaking, voiceList, hasJapaneseVoice } from "./audio.js";
 import * as API from "./api.js";
@@ -803,7 +802,7 @@ async function sendChat() {
   sendBtn.disabled = true;
   let acc = "";
   try {
-    await sendMessage(text, progress.state.chat, studyContext(), {
+    await sendMessage(progress.state.chat, studyContext(), {
       onDelta: (_d, full) => {
         acc = full;
         bubble.innerHTML = formatMsg(full);
@@ -856,7 +855,7 @@ function renderSettings(v) {
   page.append(el("section", { class: "card", style: { marginTop: "16px" } }, [
     el("h2", { class: "h2", style: { marginBottom: "4px" } }, [t("settings__speech")]),
     el("p", { class: "small muted", style: { marginBottom: "6px" } }, [t("settings__speechSub")]),
-    settingRow("", t("settings__voiceAuto"), voiceSel),
+    settingRow(t("settings__voice"), t("settings__voiceSub"), voiceSel),
     el("div", { class: "row", style: { marginTop: "12px" } }, [
       el("button", { class: "btn btn--sm", onclick: () => speak("あいうえお") }, ["🔊 あいうえお"]),
       el("button", { class: "btn btn--sm", onclick: () => speakRomaji("shi") }, ["🔊 shi"]),

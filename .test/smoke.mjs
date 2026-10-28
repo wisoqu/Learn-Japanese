@@ -225,6 +225,22 @@ check("progress serialises", !!raw && raw.length > 50);
 progress.reset();
 check("reset clears chars", Object.keys(progress.state.chars).length === 0);
 
+console.log("\nchat message building");
+const chatMod = await import(pathToFileURL(path.join(APP, "js", "chat.js")).href);
+const hist = [
+  { role: "user", text: "Здравствуйте" },
+  { role: "ai", text: "Привет!" },
+  { role: "user", text: "Что такое さ?" },
+];
+const msgs = chatMod.toGeminiMessages(hist, { lang: "ru" });
+check("system prompt is prepended exactly once", msgs[0].role === "system" && msgs[0].parts[0].text.length > 50);
+check("ai turns become model turns", msgs.find((m) => m.role === "model") !== undefined);
+check("user turns stay user turns", msgs.filter((m) => m.role === "user").length === 2);
+check("no duplicated user message",
+  msgs.filter((m) => m.role === "user").filter((m) => m.parts[0].text === "Что такое さ?").length === 1);
+check("system prompt mentions the current study context", /учитель/.test(msgs[0].parts[0].text));
+check("chat is off until a key is set", chatMod.chatEnabled() === false);
+
 console.log("\nerrors captured");
 check("no unhandled errors", errors.length === 0, errors.join(" | "));
 

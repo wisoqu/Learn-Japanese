@@ -52,15 +52,17 @@ export function chatEnabled() {
 }
 
 /**
- * Отправить сообщение и потоком писать ответ в onDelta.
+ * Отправить диалог и потоком писать ответ в onDelta.
+ * `history` должна уже содержать отправленное сообщение — приложение
+ * добавляет его в progress.state.chat до вызова.
  * @returns {Promise<string>} полный текст ответа
  */
-export async function sendMessage(text, history, ctx, { onDelta, signal } = {}) {
+export async function sendMessage(history, ctx, { onDelta, signal } = {}) {
   const key = settings.get("geminiKey");
   if (!key) throw new Error("no-key");
   API.chatKey = key;
   API.model = settings.get("geminiModel") || "gemini-2.0-flash";
-  const msgs = toGeminiMessages([...history, { role: "user", text }], ctx);
+  const msgs = toGeminiMessages(history, ctx);
   let full = "";
   await API.chatStream(msgs, {
     onDelta: (d) => { full += d; onDelta && onDelta(d, full); },
